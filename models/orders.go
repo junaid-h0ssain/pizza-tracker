@@ -1,8 +1,8 @@
 package models
 
 import (
-	"gorm.io/gorm"
 	"github.com/teris-io/shortid"
+	"gorm.io/gorm"
 )
 
 var (
