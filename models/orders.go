@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"github.com/teris-io/shortid"
 )
 
@@ -16,7 +16,8 @@ var (
 	}
 	PizzaTypes    = []string{
 		"Margherita",
-		"Pepperoni", "Veggie",
+		"Pepperoni", 
+		"Veggie",
 		"BBQ Chicken",
 		"Hawaiian",
 	}
@@ -46,11 +47,11 @@ type Order struct {
 
 type OrderItem struct {
 	gorm.Model
-	ID           string    `gorm:"primary_key;size:13" json:"id"`
-	OrderID      string    `gorm:"index;not null" json:"order_id"`
-	Size         string `gorm:"not null;size:20" json:"size"`
-	ItemName     string `gorm:"not null;size:100" json:"item_name"`
-	Instructions string `gorm:"size:200" json:"instructions"`
+	ID           string 	`gorm:"primary_key;size:13" json:"id"`
+	OrderID      string 	`gorm:"index;not null" json:"order_id"`
+	Size         string 	`gorm:"not null;size:20" json:"size"`
+	ItemName     string 	`gorm:"not null;size:100" json:"item_name"`
+	Instructions string 	`gorm:"size:200" json:"instructions"`
 }
 
 func (o *Order) BeforeCreate(tx *gorm.DB) error {
