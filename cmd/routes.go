@@ -30,5 +30,5 @@ func setupRoutes(router *gin.Engine, h *Handler, store sessions.Store) {
 	}
 
 	// Static files
-	router.Static("/static", "./templates/static")
+	router.Static("/static", "./tmp/static")
 }

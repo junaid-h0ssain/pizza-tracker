@@ -55,7 +55,7 @@
                       {{range $index, $pizza := .Items}}
                       <div class="flex items-center gap-2">
                         <span class="text-gray-400">#{{add $index 1}}</span>
-                        <span class="truncate">{{$pizza.Size}} {{$pizza.Pizza}}</span>
+                        <span class="truncate">{{$pizza.Size}} {{$pizza.ItemName}}</span>
                         {{if $pizza.Instructions}}
                         <span class="size-4 text-gray-400 cursor-help" title="{{$pizza.Instructions}}">ⓘ</span>
                         {{end}}
