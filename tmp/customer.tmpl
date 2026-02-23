@@ -67,7 +67,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p class="text-sm text-gray-500 mb-1">Type</p>
-              <p class="font-semibold text-gray-900">{{ $pizza.ItemName }}</p>
+              <p class="font-semibold text-gray-900">{{ $pizza.Pizza }}</p>
             </div>
             <div>
               <p class="text-sm text-gray-500 mb-1">Size</p>
@@ -87,6 +87,7 @@
 
 <script>
   const statuses = {{json .Statuses}};
+  const orderId = "{{.Order.ID}}";
 
   function updateStatusBar(currentStatus) {
     const currentIndex = statuses.indexOf(currentStatus);
@@ -104,6 +105,10 @@
   }
 
   updateStatusBar("{{.Order.Status}}");
+
+  const eventSrc = new EventSource(`/notifications?orderId=${orderId}`);
+  eventSrc.onmessage = () => location.reload();
+  eventSrc.onerror = err => console.error("EventSource failed:", err);
 </script>
 
 {{template "bottom" .}}

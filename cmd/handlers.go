@@ -8,13 +8,13 @@ import (
 type Handler struct {
 	orders              *models.OrderModel
 	users               *models.UserModel
-	//notificationManager *NotificationManager
+	notificationManager *NotificationManager
 }
 
 func NewHandler(dbModel *models.DBModel) *Handler {
 	return &Handler{
 		orders:              &dbModel.Order,
 		users:               &dbModel.User,
-		//notificationManager: NewNotificationManager(),
+		notificationManager: NewNotificationManager(),
 	}
 }

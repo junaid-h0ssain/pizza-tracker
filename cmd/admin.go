@@ -43,8 +43,14 @@ func (h *Handler) HandleLoginPost(c *gin.Context) {
 		return
 	}
 
-	SetSessionValue(c, "userID", fmt.Sprintf("%v", user.ID))
-	SetSessionValue(c, "username", user.Username)
+	err = SetSessionValue(c, "userID", fmt.Sprintf("%v", user.ID))
+	if err != nil {
+		return 
+	}
+	err = SetSessionValue(c, "username", user.Username)
+	if err != nil {
+		return 
+	}
 
 	c.Redirect(http.StatusSeeOther, "/admin")
 }
@@ -82,6 +88,8 @@ func (h *Handler) HandleOrderPut(c *gin.Context) {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	h.notificationManager.Notify("order:"+orderID, "order_updated")
 
 	c.Redirect(http.StatusSeeOther, "/admin")
 }

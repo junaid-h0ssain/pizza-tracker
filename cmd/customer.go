@@ -1,6 +1,7 @@
 package main
 
 import (
+	//"fmt"
 	"log/slog"
 	"net/http"
 	"pizza-tracker/models"
@@ -13,6 +14,7 @@ type CustomerData struct {
 	Order    models.Order
 	Statuses []string
 }
+
 type OrderFormData struct {
 	PizzaTypes []string
 	PizzaSizes []string
@@ -51,19 +53,10 @@ func (h *Handler) HandleNewOrderPost(c *gin.Context) {
 		}
 	}
 
-	// Use the first pizza as the "main" one for the order summary
-	var mainPizzaType, mainPizzaSize string
-	if len(orderItems) > 0 {
-		mainPizzaType = orderItems[0].ItemName
-		mainPizzaSize = orderItems[0].Size
-	}
-
 	order := models.Order{
 		CustomerName: form.Name,
 		Phone:        form.Phone,
 		Address:      form.Address,
-		PizzaType:    mainPizzaType,
-		PizzaSize:    mainPizzaSize,
 		Status:       models.OrderStatuses[0], // "Order Placed"
 		Items:        orderItems,
 	}
@@ -75,6 +68,8 @@ func (h *Handler) HandleNewOrderPost(c *gin.Context) {
 	}
 
 	slog.Info("Order created", "orderId", order.ID, "customer", order.CustomerName)
+
+	h.notificationManager.Notify("admin:new_orders", "new_order")
 
 	c.Redirect(http.StatusSeeOther, "/customer/"+order.ID)
 }
