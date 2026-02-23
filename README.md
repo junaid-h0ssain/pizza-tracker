@@ -37,46 +37,13 @@ A real-time pizza order tracking web application built with Go. Customers submit
 | Tailwind CSS (CDN) | Utility-first CSS styling via CDN, no build step required |
 | Go html/template | Server-side HTML templating |
 
----
 
-## Project Structure
-
-```
-pizza-tracker/
-├── cmd/
-│   ├── main.go             # Entry point
-│   ├── handlers.go         # Handler struct and dependencies
-│   ├── routes.go           # URL routing
-│   ├── customer.go         # Customer order and tracking handlers
-│   ├── admin.go            # Admin login, dashboard, order management
-│   ├── middleware.go       # Auth middleware protecting admin routes
-│   ├── notifications.go    # NotificationManager for SSE clients
-│   ├── events.go           # SSE HTTP handlers
-│   ├── validators.go       # Custom validators for pizza type and size
-│   └── utils.go            # Config loading, templates, session setup
-├── models/
-│   ├── models.go           # DB initialization and AutoMigrate
-│   ├── orders.go           # Order and OrderItem structs and DB methods
-│   └── user.go             # User struct and authentication methods
-├── tmp/
-│   ├── base.tmpl           # Shared HTML head and foot partials
-│   ├── orders.tmpl         # Customer order form
-│   ├── customer.tmpl       # Customer order tracking page
-│   ├── admin.tmpl          # Admin dashboard
-│   ├── login.tmpl          # Admin login page
-│   └── static/
-│       └── pizza.svg
-├── data/
-│   └── orders.db           # SQLite database (auto-created on first run)
-├── go.mod
-└── go.sum
-```
 
 ---
 
 ## Prerequisites
 
-- Go 1.21 or later
+- Go 1.25 or later
 - GCC or a C compiler (required by the SQLite driver, which uses CGO)
 
 On Debian/Ubuntu:
@@ -165,20 +132,4 @@ INSERT INTO users (username, password) VALUES ('admin', '<bcrypt-hash>');
 After that, log in at `http://localhost:8080/login`.
 
 ---
-
-## Routes
-
-| Method | Path | Access | Description |
-|---|---|---|---|
-| GET | `/` | Public | Customer order form |
-| POST | `/new-order` | Public | Submit a new order |
-| GET | `/customer/:id` | Public | Order tracking page |
-| GET | `/notifications` | Public | SSE stream for order status updates |
-| GET | `/login` | Public | Admin login page |
-| POST | `/login` | Public | Admin login submission |
-| POST | `/logout` | Public | Admin logout |
-| GET | `/admin` | Admin | Admin dashboard |
-| POST | `/admin/order/:id/update` | Admin | Update order status |
-| POST | `/admin/order/:id/delete` | Admin | Delete an order |
-| GET | `/admin/notifications` | Admin | SSE stream for new order alerts |
 
