@@ -1,0 +1,17 @@
+{{template "top" .}}
+    <title>Admin Dashboard - Pizza Tracker</title>
+</head>
+<body class="bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 min-h-screen p-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-900">Pizza Tracker Admin</h1>
+      <div class="flex items-center gap-4">
+        <span class="text-gray-700 font-medium">Welcome, {{.Username}}</span>
+        <form action="/logout" method="POST">
+          <button type="submit" class="px-5 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-600 active:scale-95 transition-all shadow-sm">Logout</button>
+        </form>
+      </div>
+    </div>
+    <p class="text-gray-600">Order management coming soon...</p>
+  </div>
+{{template "bottom" .}}

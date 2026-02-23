@@ -21,23 +21,23 @@ func main() {
 	}
 	slog.Info("Database initialized successfully")
 
-	RegisterValidators()
+	sessionStore := setupSessionStore(dbModel.DB, []byte(cfg.SessionSecretKey))
 
 	h := NewHandler(dbModel)
 
 	router := gin.Default()
 
+	// Load templates
 	if err := loadTemplates(router); err != nil {
 		slog.Error("Failed to load templates", "error", err)
 		os.Exit(1)
 	}
 
-	setupRoutes(router, h)
+	setupRoutes(router, h, sessionStore)
+
+	RegisterValidators()
 
 	slog.Info("Server starting", "url", "http://localhost:"+cfg.Port)
 
-	err = router.Run(":" + cfg.Port)
-	if err != nil {
-		return 
-	}
+	router.Run(":" + cfg.Port)
 }
