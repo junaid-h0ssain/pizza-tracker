@@ -12,7 +12,6 @@ func setupRoutes(router *gin.Engine, h *Handler, store sessions.Store) {
 	router.GET("/", h.ServeNewOrderForm)
 	router.POST("/new-order", h.HandleNewOrderPost)
 	router.GET("/customer/:id", h.serveCustomer)
-	//router.GET("/notifications", h.notificationHandler)
 
 	// Auth routes
 	router.GET("/login", h.HandleLoginGet)
@@ -24,9 +23,10 @@ func setupRoutes(router *gin.Engine, h *Handler, store sessions.Store) {
 	admin.Use(h.AuthMiddleware())
 	{
 		admin.GET("", h.ServeAdminDashboard)
-		//admin.GET("/notifications", h.adminNotificationHandler)
+		admin.POST("/order/:id/update", h.HandleOrderPut)
+		admin.POST("/order/:id/delete", h.HandleOrderDelete)
 	}
 
 	// Static files
-	router.Static("/static", "./templates/static")
+	router.Static("/static", "./tmp/static")
 }
