@@ -42,11 +42,11 @@
               </thead>
               <tbody class="bg-white/70 divide-y divide-gray-100">
                 {{range .Orders}}
-                <tr class="hover:bg-gray-50/50 transition-colors">
+                <tr id="order-{{.ID}}" class="hover:bg-gray-50/50 transition-colors">
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
                     <a href="/customer/{{.ID}}" class="text-blue-600 hover:text-blue-700 font-medium hover:underline">{{.ID}}</a>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium">{{.Status}}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium order-status">{{.Status}}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{.CustomerName}}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{.Phone}}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{.Address}}</td>
@@ -65,16 +65,16 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
                     <div class="flex gap-2">
-                      <form action="/admin/order/{{.ID}}/update" method="POST">
-                        <select name="status" class="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all bg-white font-medium" onchange="this.form.submit()">
+                      <form action="/admin/order/{{.ID}}/update" method="POST" onsubmit="updateStatus(event, '{{.ID}}')">
+                        <select name="status" class="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all bg-white font-medium" onchange="this.form.requestSubmit()">
                           {{$currentStatus := .Status}}
                           {{range $.Statuses}}
                           <option value="{{.}}" {{if eq . $currentStatus}}selected{{end}}>{{.}}</option>
                           {{end}}
                         </select>
                       </form>
-                      <form action="/admin/order/{{.ID}}/delete" method="POST">
-                        <button type="submit" class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600 active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all" onclick="return confirm('Are you sure you want to delete this order?')">
+                      <form action="/admin/order/{{.ID}}/delete" method="POST" onsubmit="deleteOrder(event, '{{.ID}}')">
+                        <button type="submit" class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600 active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all">
                           <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                           </svg>
@@ -94,6 +94,71 @@
 </div>
 
 <script>
+  async function updateStatus(event, orderId) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const status = formData.get('status');
+    const row = document.getElementById(`order-${orderId}`);
+    const statusCell = row.querySelector('.order-status');
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(formData).toString()
+      });
+
+      if (response.ok) {
+        statusCell.textContent = status;
+        // Visual feedback
+        statusCell.classList.add('text-emerald-600');
+        setTimeout(() => statusCell.classList.remove('text-emerald-600'), 2000);
+      } else {
+        alert('Failed to update status');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error connecting to server');
+    }
+  }
+
+  async function deleteOrder(event, orderId) {
+    if (!confirm('Are you sure you want to delete this order?')) {
+      event.preventDefault();
+      return;
+    }
+    event.preventDefault();
+    console.log('Deleting order:', orderId);
+
+    const form = event.target;
+    const row = document.getElementById(`order-${orderId}`);
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        }
+      });
+
+      console.log('Delete response:', response.status);
+      if (response.ok) {
+        row.style.opacity = '0';
+        setTimeout(() => row.remove(), 300);
+        console.log('Order deleted successfully:', orderId);
+      } else {
+        alert('Failed to delete order');
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('Error connecting to server');
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const updateTime = () => `Last updated on: ${new Date().toLocaleString()}`;
     const lastFetched = document.getElementById('lastFetched');
