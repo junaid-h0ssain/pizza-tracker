@@ -91,6 +91,11 @@ func (h *Handler) HandleOrderPut(c *gin.Context) {
 
 	h.notificationManager.Notify("order:"+orderID, "order_updated")
 
+	if c.GetHeader("X-Requested-With") == "XMLHttpRequest" {
+		c.Status(http.StatusOK)
+		return
+	}
+
 	c.Redirect(http.StatusSeeOther, "/admin")
 }
 
@@ -99,6 +104,11 @@ func (h *Handler) HandleOrderDelete(c *gin.Context) {
 
 	if err := h.orders.DeleteOrder(orderID); err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if c.GetHeader("X-Requested-With") == "XMLHttpRequest" {
+		c.Status(http.StatusOK)
 		return
 	}
 
