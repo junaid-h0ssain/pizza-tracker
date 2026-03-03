@@ -20,6 +20,9 @@ A real-time pizza order tracking web application built with Go. Customers submit
 - See a real-time badge when new orders arrive
 
 ---
+<!-- ![pizza-tracker-demo](#file:pizza-tracker-demo.gif) -->
+<img src="pizza-tracker-demo.gif" alt="Pizza Tracker Demo" width="600">
+--- 
 
 ## Tech Stack
 
