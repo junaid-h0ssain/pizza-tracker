@@ -76,7 +76,7 @@ On macOS (with Xcode Command Line Tools already installed, no extra step needed)
    go run ./cmd
    ```
 
-   The server starts at `http://localhost:8080` by default.
+   The server starts at `http://localhost:9090` by default.
 
 4. Create the first admin account (see below), then visit `http://localhost:8080`.
 
@@ -88,7 +88,7 @@ All variables are optional. The application falls back to the defaults shown bel
 
 | Variable | Default | Description |
 |---|---|---|
-| `PORT` | `8080` | Port the server listens on |
+| `PORT` | `9090` | Port the server listens on |
 | `DATABASE_URL` | `./data/orders.db` | Path to the SQLite database file |
 | `SESSION_SECRET_KEY` | `pizza-order-secret-key` | Secret key used to sign session cookies |
 
@@ -106,7 +106,7 @@ The application does not ship with any admin accounts. You need to create one di
 Using the SQLite CLI:
 
 ```bash
-# Install sqlite3 if needed: sudo apt install sqlite3
+# Install sqlite3 if needed: sudo dnf install sqlite3
 sqlite3 data/orders.db
 ```
 
